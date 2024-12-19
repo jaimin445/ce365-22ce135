@@ -1,34 +1,36 @@
-// this program checks a*b*
-
-
+// this programs checks a*b*
 #include<stdio.h>
-// #include<conio.h>
 
-int main(){
-    char str[200];
-    int flag=0,flag2=0;
-    gets(str);
+int main() {
+    char str[200]; //  the input string
+    int flag = 0, flag2 = 0; 
+    gets(str); // Reads the input string 
 
-    for(int i=0;str[i]!=NULL;i++){
-        if(str[i]=='a'||str[i]=='b'){
-            if(str[i]=='a'){
-                if(flag==1){
-                    printf("invalid string");
-                    flag2=1;
+    // Loop runs until the NULL character is encountered
+    for (int i = 0; str[i] != NULL; i++) {
+        // only 'a' or 'b' are allowed
+        if (str[i] == 'a' || str[i] == 'b') {
+            if (str[i] == 'a') { 
+                // If 'a' is encountered after 'b', it is invalid
+                if (flag == 1) { 
+                    printf("invalid string"); 
+                    flag2 = 1; // Sets the error flag
                     break;
                 }
+            } 
+            else if (str[i] == 'b') {
+                flag = 1; // Sets the flag indicating 'b' has been encountered
             }
-            else if(str[i]=='b'){
-                flag=1;
-            }
-        }
-        else{
+        } 
+        else {
             printf("invalid string");
-            flag2=1;
+            flag2 = 1; // Sets the error flag
+            break; 
         }
     }
 
-    if(flag2!=1){
-        printf("string is valid");
+    
+    if (flag2 != 1) {
+        printf("string is valid"); 
     }
 }
