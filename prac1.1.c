@@ -37,6 +37,10 @@ int main() {
     }
 
     if (flag2 != 1) {
-        printf("string is valid"); 
+        if(flag==0)
+        {
+            printf("string is invalid");
+        }else{
+        printf("string is valid"); }
     }
 }
