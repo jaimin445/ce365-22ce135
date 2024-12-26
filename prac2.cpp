@@ -32,7 +32,7 @@ int main() {
 
     // Define transition table
     vector<vector<int> > transitionTable(stateCount + 1, vector<int>(numInputs));
-    cout << "Define the transition table (state, input -> next state):\n";
+    cout << "transition table:\n";
     for (int state = 1; state <= stateCount; ++state) {
         for (int symbolIndex = 0; symbolIndex < numInputs; ++symbolIndex) {
             cout << "State " << state << " with " << inputSymbols[symbolIndex] << " : ";
