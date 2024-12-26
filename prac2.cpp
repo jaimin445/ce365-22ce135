@@ -1,77 +1,66 @@
 #include <iostream>
+#include <vector>
 #include <unordered_map>
-#include <unordered_set>
 #include <string>
-
 using namespace std;
 
-// Function to validate if the input string is accepted by the finite automaton
-bool validateString(const unordered_map<int, unordered_map<char, int> >& transitionTable,
-                    int initialState, const unordered_set<int>& acceptingStates,
-                    const string& inputString) {
-    int currentState = initialState; // Start at the initial state
-
-    // Process each symbol in the input string
-    for (char symbol : inputString) {
-        // Check if there's a valid transition for the current symbol
-        if (transitionTable.at(currentState).count(symbol) == 0) {
-            return false; // Invalid transition, reject the string
-        }
-        currentState = transitionTable.at(currentState).at(symbol); // Move to the next state
-    }
-
-    // Check if the final state is one of the accepting states
-    return acceptingStates.count(currentState) > 0;
-}
-
 int main() {
-    int noOfStates, initialState, noOfAcceptingStates; // Number of states, initial state, and accepting states
-    string inputSymbols, inputString; // Symbols and input string
-    unordered_set<int> acceptingStates; // Set of accepting states
-    unordered_map<int, unordered_map<char, int> > transitionTable; // Transition table
-
-    // Input symbols
+    int numInputs, stateCount, startState, numFinalStates;
+    
+    // Read input symbols
+    cout << "Enter the number of input symbols: ";
+    cin >> numInputs;
+    vector<char> inputSymbols(numInputs);
     cout << "Enter input symbols: ";
-    cin >> inputSymbols; // Take the allowed input symbols as a string
-
-    // Number of states
-    cout << "Enter number of states: ";
-    cin >> noOfStates; // Number of states in the finite automaton
-
-    // Initial state
-    cout << "Enter initial state: ";
-    cin >> initialState; // Specify the initial state
-
-    // Accepting states
-    cout << "Enter number of accepting states: ";
-    cin >> noOfAcceptingStates; // Number of accepting states
-    cout << "Enter accepting states: ";
-    for (int i = 0; i < noOfAcceptingStates; ++i) {
-        int state;
-        cin >> state; // Input each accepting state
-        acceptingStates.insert(state); // Add it to the set
+    for (int i = 0; i < numInputs; ++i) {
+        cin >> inputSymbols[i];
     }
 
-    // Transition table
-    cout << "Define transitions:\n";
-    for (int state = 1; state <= noOfStates; ++state) { // For each state
-        for (char symbol : inputSymbols) { // For each input symbol
-            cout << "State " << state << " + Symbol '" << symbol << "' -> Next State: ";
-            int nextState;
-            cin >> nextState; // Input the next state for the given state and symbol
-            transitionTable[state][symbol] = nextState; // Add transition to the table
+    // Read states and transitions
+    cout << "Enter the total number of states: ";
+    cin >> stateCount;
+    cout << "Enter the starting state: ";
+    cin >> startState;
+    
+    cout << "Enter the number of final states: ";
+    cin >> numFinalStates;
+    vector<int> finalStates(numFinalStates);
+    cout << "Enter final states: ";
+    for (int i = 0; i < numFinalStates; ++i) {
+        cin >> finalStates[i];
+    }
+
+    // Define transition table
+    vector<vector<int> > transitionTable(stateCount + 1, vector<int>(numInputs));
+    cout << "Define the transition table (state, input -> next state):\n";
+    for (int state = 1; state <= stateCount; ++state) {
+        for (int symbolIndex = 0; symbolIndex < numInputs; ++symbolIndex) {
+            cout << "State " << state << " with " << inputSymbols[symbolIndex] << " : ";
+            cin >> transitionTable[state][symbolIndex];
         }
     }
 
-    // Input string
-    cout << "Enter input string: ";
-    cin >> inputString; // String to be validated
+    // Process the input string
+    string inputString;
+    cout << "Enter the input string: ";
+    cin >> inputString;
 
-    // Validate the input string
-    if (validateString(transitionTable, initialState, acceptingStates, inputString)) {
-        cout << "The input string is ACCEPTED." << endl; // Accepted case
+    int currentState = startState;
+    for (char ch : inputString) {
+        auto it = find(inputSymbols.begin(), inputSymbols.end(), ch);
+        if (it == inputSymbols.end()) {
+            cout << "Invalid input symbol: " << ch << endl;
+            return 1;
+        }
+        int symbolIndex = distance(inputSymbols.begin(), it);
+        currentState = transitionTable[currentState][symbolIndex];
+    }
+
+    // Check if the final state is accepting
+    if (find(finalStates.begin(), finalStates.end(), currentState) != finalStates.end()) {
+        cout << "The string is accepted." << endl;
     } else {
-        cout << "The input string is REJECTED." << endl; // Rejected case
+        cout << "The string is rejected." << endl;
     }
 
     return 0;
